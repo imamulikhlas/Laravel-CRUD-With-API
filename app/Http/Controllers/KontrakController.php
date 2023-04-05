@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Kontrak;
 use App\Models\Pegawai;
 use App\Models\JabatanPegawai;
+use Illuminate\Support\Facades\Validator;
 
 class KontrakController extends Controller
 {
@@ -28,15 +29,34 @@ class KontrakController extends Controller
         $kontrak = Kontrak::find($id);
         return response()->json($kontrak);
     }
-
     public function store(Request $request)
     {
-        $kontrak = new Kontrak;
-        $kontrak->nama = $request->nama;
-        $kontrak->alamat = $request->alamat;
-        $kontrak->save();
+        $validator = Validator::make($request->all(), [
+            'pegawai_id' => 'required|integer|min:1',
+            'jabatan_id' => 'required|integer|min:1',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date',
 
-        return response()->json($kontrak);
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $pegawai_id = $request->input('pegawai_id');
+        $jabatan_id = $request->input('jabatan_id');
+        $tanggal_mulai = $request->input('tanggal_mulai');
+        $tanggal_selesai = $request->input('tanggal_selesai');
+        
+        // Simpan data kontrak ke database
+        $kontrak = new Kontrak;
+        $kontrak->pegawai_id = $pegawai_id;
+        $kontrak->jabatan_id = $jabatan_id;
+        $kontrak->tanggal_mulai = $tanggal_mulai;
+        $kontrak->tanggal_selesai = $tanggal_selesai;
+        $kontrak->save();
+    
+        return redirect()->route('home')->with('success', 'Kontrak berhasil disimpan!');
     }
 
     public function update(Request $request, $id)

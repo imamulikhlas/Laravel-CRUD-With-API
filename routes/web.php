@@ -8,7 +8,7 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KontrakController;
 
 
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 Route::get('/pegawai/{id}', [PegawaiController::class, 'show'])->name('pegawai.show');
@@ -20,4 +20,5 @@ Route::delete('/jabatan/{id}', [JabatanController::class, 'destroy'])->name('jab
 
 Route::get('/kontrak', [KontrakController::class, 'index'])->name('kontrak.index');
 Route::get('/kontrak/{id}', [KontrakController::class, 'show'])->name('kontrak.show');
+Route::post('/kontrak', [KontrakController::class, 'store'])->name('kontrak.store');
 Route::delete('/kontrak/{id}', [KontrakController::class, 'destroy'])->name('kontrak.destroy');
